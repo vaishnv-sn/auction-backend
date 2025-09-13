@@ -1,17 +1,19 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 
 import initDB from "./config/db.js";
 import auctionRoutes from "./routes/auctionRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
+dotenv.config();
+
 const app = express();
-const PORT = 4000;
-const allowedOrigin = "http://localhost:5173";
+const PORT = process.env.PORT || 4000;
 
 const corsOptions = {
-  origin: allowedOrigin,
+  origin: process.env.ALLOWED_ORIGIN,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Content-Type, Authorization",

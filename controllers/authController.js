@@ -2,7 +2,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "supersecret"; // move to env in real project
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export const signup = async (req, res, next) => {
   try {
