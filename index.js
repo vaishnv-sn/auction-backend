@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import auctionRoutes from "./routes/auctionRoutes.js";
+import initDB from "./config/db.js";
 
 const app = express();
 const PORT = 4000;
@@ -19,8 +20,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.use("/api", auctionRoutes);
+// ✅ Start server only after DB is ready
+const startServer = async () => {
+  try {
+    const db = await initDB();
+    console.log("✅ SQLite connected and tables ready");
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+    app.locals.db = db;
+
+    // routes (db available now)
+    app.use("/api", auctionRoutes);
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to initialize DB:", err);
+    process.exit(1); // stop process if DB fails
+  }
+};
+
+startServer();
