@@ -25,6 +25,7 @@ const initDB = async () => {
       startingPrice INTEGER NOT NULL DEFAULT 100,
       status TEXT NOT NULL DEFAULT 'active',
       lastBidId INTEGER DEFAULT NULL,
+      lockedUntil INTEGER DEFAULT 0,
       createdAt INTEGER DEFAULT (strftime('%s','now')),
       FOREIGN KEY(lastBidId) REFERENCES bids(id) ON DELETE SET NULL
     );

@@ -115,8 +115,8 @@ export const createBid = async (req, res, next) => {
 
     // 6. Insert bid
     const result = await db.run(
-      `INSERT INTO bids (itemId, userId, amount, createdAt)
-       VALUES (?, ?, ?, strftime('%s','now'))`,
+      `INSERT INTO bids (itemId, userId, amount)
+       VALUES (?, ?, ?)`,
       [itemId, userId, amount]
     );
 
