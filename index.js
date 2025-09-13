@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import auctionRoutes from "./routes/auctionRoutes.js";
+
 import initDB from "./config/db.js";
+import auctionRoutes from "./routes/auctionRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 const PORT = 4000;
@@ -20,7 +22,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-// ✅ Start server only after DB is ready
+// Start server only after DB is ready
 const startServer = async () => {
   try {
     const db = await initDB();
@@ -28,15 +30,15 @@ const startServer = async () => {
 
     app.locals.db = db;
 
-    // routes (db available now)
     app.use("/api", auctionRoutes);
+    app.use("/api/auth", authRoutes);
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
     console.error("❌ Failed to initialize DB:", err);
-    process.exit(1); // stop process if DB fails
+    process.exit(1);
   }
 };
 

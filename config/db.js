@@ -1,18 +1,17 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
-// This opens a database handle
 const initDB = async () => {
   const db = await open({
-    filename: "./auction.db", // creates a file auction.db in root
+    filename: "./auction.db",
     driver: sqlite3.Database,
   });
 
-  // Create tables if not exist
   await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,
+      name TEXT NOT NULL,
       passwordHash TEXT NOT NULL
     );
   `);
