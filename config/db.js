@@ -12,7 +12,8 @@ const initDB = async () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,
       name TEXT NOT NULL,
-      passwordHash TEXT NOT NULL
+      passwordHash TEXT NOT NULL,
+      createdAt INTEGER DEFAULT (strftime('%s','now'))
     );
   `);
 
@@ -20,21 +21,24 @@ const initDB = async () => {
     CREATE TABLE IF NOT EXISTS items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      currentBid INTEGER NOT NULL DEFAULT 100,
-      lastBidder TEXT DEFAULT NULL,
-      lockedUntil INTEGER DEFAULT 0
+      description TEXT,
+      startingPrice INTEGER NOT NULL DEFAULT 100,
+      status TEXT NOT NULL DEFAULT 'active',
+      lastBidId INTEGER DEFAULT NULL,
+      createdAt INTEGER DEFAULT (strftime('%s','now')),
+      FOREIGN KEY(lastBidId) REFERENCES bids(id) ON DELETE SET NULL
     );
   `);
 
   await db.exec(`
     CREATE TABLE IF NOT EXISTS bids (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER,
-      itemId INTEGER,
-      amount INTEGER,
+      userId INTEGER NOT NULL,
+      itemId INTEGER NOT NULL,
+      amount INTEGER NOT NULL,
       timestamp INTEGER DEFAULT (strftime('%s','now')),
-      FOREIGN KEY(userId) REFERENCES users(id),
-      FOREIGN KEY(itemId) REFERENCES items(id)
+      FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY(itemId) REFERENCES items(id) ON DELETE CASCADE
     );
   `);
 
