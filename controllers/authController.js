@@ -2,8 +2,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export const signup = async (req, res, next) => {
   try {
     const db = req.app.locals.db;
@@ -17,7 +15,7 @@ export const signup = async (req, res, next) => {
 
     try {
       await db.run(
-        "INSERT INTO users (name, email, passwordHash) VALUES (?, ?)",
+        "INSERT INTO users (name, email, passwordHash) VALUES (?, ?, ?)",
         [name, email, passwordHash]
       );
     } catch (err) {
@@ -47,6 +45,8 @@ export const login = async (req, res, next) => {
     if (!isValid) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
+
+    const JWT_SECRET = process.env.JWT_SECRET;
 
     // generate JWT
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
