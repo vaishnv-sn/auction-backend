@@ -1,7 +1,12 @@
 import { Router } from "express";
-import { getAuctionItems } from "../controllers/auctionController.js";
+import {
+  getAuctionItems,
+  createBid,
+} from "../controllers/auctionController.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = Router();
-router.get("/auctionItems", getAuctionItems);
+router.get("/auctionItems", authMiddleware, getAuctionItems);
+router.post("/createBid", authMiddleware, createBid);
 
 export default router;

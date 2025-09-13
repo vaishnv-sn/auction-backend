@@ -32,6 +32,7 @@ export const createBid = async (req, res, next) => {
     const db = await initDB();
     const { itemId, amount } = req.body;
     const userId = req.user?.id;
+    console.log("userId:", userId);
 
     if (!userId) {
       return res
